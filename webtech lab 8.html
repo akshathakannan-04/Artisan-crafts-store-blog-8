@@ -1,0 +1,455 @@
+
+<!DOCTYPE html>
+<html lang="en" ng-app="craftApp">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Akshatha's Artisan Crafts</title>
+
+    <!-- AngularJS Library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #fff8f0;
+            color: #49352b;
+        }
+
+        header {
+            background-color: #713f35;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        header h1 {
+            font-family: Georgia, serif;
+            font-size: 30px;
+        }
+
+        nav {
+            background-color: #a76550;
+            text-align: center;
+            padding: 13px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 12px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            color: #ffe3b3;
+        }
+
+        .welcome {
+            text-align: center;
+            padding: 30px 15px;
+            background-color: #f5e2d4;
+        }
+
+        .welcome h2 {
+            color: #874b3d;
+        }
+
+        section {
+            background: white;
+            max-width: 850px;
+            margin: 25px auto;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #00000015;
+        }
+
+        h2 {
+            text-align: center;
+            color: #874b3d;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 11px;
+            margin-top: 6px;
+            border: 1px solid #c9a99b;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #874b3d;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            margin-top: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #b16c54;
+        }
+
+        .card {
+            background-color: #fff8f0;
+            border: 1px solid #e6cbbb;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 8px;
+        }
+
+        .comment {
+            background-color: #f5e8df;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 6px;
+        }
+
+        .delete {
+            background-color: #a33d35;
+            float: right;
+            margin-top: 0;
+        }
+
+        .result {
+            background-color: #f5e8df;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 6px;
+            font-weight: bold;
+        }
+
+        .todo-item {
+            padding: 12px;
+            margin-top: 10px;
+            background-color: #f5e8df;
+            border-radius: 6px;
+            overflow: auto;
+        }
+
+        footer {
+            background-color: #713f35;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        @media(max-width: 600px) {
+            section {
+                margin: 15px;
+                padding: 18px;
+            }
+
+            header h1 {
+                font-size: 23px;
+            }
+
+            nav a {
+                display: inline-block;
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+
+<body ng-controller="CraftController">
+
+    <!-- HEADER -->
+    <header>
+        <h1>Akshatha's Artisan Crafts</h1>
+        <p>Handmade with Love, Crafted with Care!</p>
+    </header>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#calculator">Calculator</a>
+        <a href="#todo">Shopping List</a>
+    </nav>
+
+    <!-- 1. HELLO WORLD / WELCOME MESSAGE -->
+
+    <div class="welcome" id="home">
+        <h2>Welcome to {{storeName}}!</h2>
+
+        <p>{{message}}</p>
+
+        <p>Explore our beautiful handmade collections!</p>
+    </div>
+
+
+    <!-- 2. CUSTOMER COMMENT BOX -->
+
+    <section id="reviews">
+
+        <h2>Customer Reviews</h2>
+
+        <p>Share your experience with Akshatha's Artisan Crafts.</p>
+
+        <label>Post Your Comment:</label>
+
+        <textarea
+            ng-model="newComment"
+            placeholder="Write your review here..."
+            style="width:100%; height:90px; padding:10px;
+            margin-top:8px; border:1px solid #c9a99b;
+            border-radius:5px;">
+        </textarea>
+
+        <br>
+
+        <button ng-click="addComment()">Post Comment</button>
+
+        <h3>Comments</h3>
+
+        <div class="comment" ng-repeat="c in comments track by $index">
+
+            <span>{{c}}</span>
+
+            <button class="delete"
+                    ng-click="removeComment($index)">
+                Delete
+            </button>
+
+            <div style="clear:both"></div>
+
+        </div>
+
+        <p ng-if="comments.length == 0">
+            No comments posted yet.
+        </p>
+
+    </section>
+
+
+    <!-- 3. CRAFT PRICE CALCULATOR -->
+
+    <section id="calculator">
+
+        <h2>Craft Price Calculator</h2>
+
+        <p>Calculate the total price of your craft products.</p>
+
+        <label>Enter First Amount (Rs.):</label>
+
+        <input type="number"
+               ng-model="a"
+               placeholder="Enter first amount">
+
+        <label>Enter Second Amount (Rs.):</label>
+
+        <input type="number"
+               ng-model="b"
+               placeholder="Enter second amount">
+
+        <label>Select Operation:</label>
+
+        <select ng-model="operator">
+
+            <option value="+">Addition (+)</option>
+            <option value="-">Subtraction (-)</option>
+            <option value="*">Multiplication (*)</option>
+            <option value="/">Division (/)</option>
+
+        </select>
+
+        <button ng-click="calculate()">Calculate Price</button>
+
+        <div class="result">
+            Result: Rs. {{result}}
+        </div>
+
+        <p>{{calcMessage}}</p>
+
+    </section>
+
+
+    <!-- 4. CRAFT SHOPPING TODO LIST -->
+
+    <section id="todo">
+
+        <h2>My Craft Shopping List</h2>
+
+        <p>Add the craft products you wish to purchase.</p>
+
+        <label>Enter Shopping Item:</label>
+
+        <input type="text"
+               ng-model="newItem"
+               placeholder="Enter craft product name">
+
+        <button ng-click="addItem()">Add Item</button>
+
+        <h3>My Shopping Items</h3>
+
+        <div class="todo-item"
+             ng-repeat="item in tasks track by $index">
+
+            <span>{{item}}</span>
+
+            <button class="delete"
+                    ng-click="removeItem($index)">
+                Delete
+            </button>
+
+        </div>
+
+        <p ng-if="tasks.length == 0">
+            Your shopping list is empty.
+        </p>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+        <h3>Akshatha's Artisan Crafts</h3>
+        <p>Thank you for supporting handmade creativity!</p>
+        <p>© 2026 Akshatha's Artisan Crafts</p>
+    </footer>
+
+
+    <!-- ANGULARJS CONTROLLER -->
+
+    <script>
+
+        var app = angular.module("craftApp", []);
+
+        app.controller("CraftController", function($scope) {
+
+            // 1. Welcome Message
+
+            $scope.storeName = "Akshatha's Artisan Crafts";
+
+            $scope.message =
+                "Discover unique handmade products created with love!";
+
+
+            // 2. Customer Comments
+
+            $scope.comments = [];
+
+            $scope.addComment = function() {
+
+                if ($scope.newComment &&
+                    $scope.newComment.trim() !== "") {
+
+                    $scope.comments.push($scope.newComment.trim());
+
+                    $scope.newComment = "";
+
+                }
+                else {
+                    alert("Please enter a comment!");
+                }
+
+            };
+
+            $scope.removeComment = function(index) {
+
+                $scope.comments.splice(index, 1);
+
+            };
+
+
+            // 3. Craft Price Calculator
+
+            $scope.a = 0;
+            $scope.b = 0;
+            $scope.operator = "+";
+            $scope.result = 0;
+            $scope.calcMessage = "";
+
+            $scope.calculate = function() {
+
+                var x = Number($scope.a);
+                var y = Number($scope.b);
+
+                if (!Number.isFinite(x) ||
+                    !Number.isFinite(y)) {
+
+                    $scope.calcMessage =
+                        "Please enter valid amounts.";
+
+                    return;
+                }
+
+                if ($scope.operator == "+") {
+                    $scope.result = x + y;
+                }
+
+                else if ($scope.operator == "-") {
+                    $scope.result = x - y;
+                }
+
+                else if ($scope.operator == "*") {
+                    $scope.result = x * y;
+                }
+
+                else if ($scope.operator == "/") {
+
+                    if (y == 0) {
+                        $scope.calcMessage =
+                            "Division by zero is not allowed.";
+
+                        return;
+                    }
+
+                    $scope.result = x / y;
+
+                }
+
+                $scope.calcMessage =
+                    "Calculation completed successfully!";
+
+            };
+
+
+            // 4. Shopping To-Do List
+
+            $scope.tasks = [];
+
+            $scope.addItem = function() {
+
+                if ($scope.newItem &&
+                    $scope.newItem.trim() !== "") {
+
+                    $scope.tasks.push($scope.newItem.trim());
+
+                    $scope.newItem = "";
+
+                }
+                else {
+                    alert("Please enter a shopping item!");
+                }
+
+            };
+
+            $scope.removeItem = function(index) {
+
+                $scope.tasks.splice(index, 1);
+
+            };
+
+        });
+
+    </script>
+
+</body>
+</html>
